@@ -1,48 +1,45 @@
+# frozen_string_literal: true
+
 require_relative 'display'
 
+# module to handle main functionality of the game
 module GameLogic
-  include Display
+  # include Display
 
-  def make_guess
-    guess = gets.chomp.downcase
-    return guess if [1, @word.length].include? guess.length
+  EXIT_KEYS = %w[q; exit;]
+  SAVE_KEYS = %w[s; save;]
+  LOAD_KEYS = %w[l; load;]
+  CONTROL_KEYS = EXIT_KEYS.concat(SAVE_KEYS, LOAD_KEYS)
 
-    puts 'Invalid input.'
-    make_guess
-  end
+  def user_input
+    input = gets.chomp.downcase
 
-  def check_guess(guess)
-    word_arr = @word.split('')
-    guess.length == 1 ? check_letter(word_arr, guess) : check_word(word_arr, guess)
-  end
-
-  def check_letter(word_arr, guess)
-    if word_arr.include? guess
-      word_arr.each_index { |index| @correct_guesses[index] = guess if word_arr[index] == guess }
+    if CONTROL_KEYS.include? input
+      EXIT_KEYS.include?(input) ? return : SAVE_KEYS.include?(input) ? to_json : self.class.from_json
     else
-      @incorrect_guesses << guess
+      return evaluate_guess(key, input) if [1, key.length].include?(input.length) && /^[[:alpha:]]+$/.match?(input)
+      puts "Invalid input."
+      user_input
     end
   end
 
-  def check_word(word_arr, guess)
-    guess_arr = guess.split('')
-    guess_arr == word_arr ? @correct_guesses = guess_arr : @incorrect_guesses << guess
+  def evaluate_guess(key_word, string)
+    temp_key = key_word.split('')
+    return check_letter(temp_key, string) if string.length == 1
+
+    self.guess_history.push(string)
+    check_word(temp_key, string)
   end
 
-  def play
-    puts "\nGuesses remaining: #{@guess_count}; Enter your guess>>"
-    guess = make_guess
-    check_guess(guess)
-    show_game_state
-
-    play unless win_game? || lose_game? || @guess_count < 1
+  def check_letter(key_word, char)
+    if key.include?(char)
+      key_word.each_index do |index|
+        uncovered_key[index] = char if key_word[index] == char
+      end
+    end
   end
 
-  def win_game?
-    @correct_guesses.none? { |char| char == '_' }
-  end
-
-  def lose_game?
-    @incorrect_guesses.length == 6
+  def check_word(key_word, string)
+    uncovered_key = string.split('') if string == key
   end
 end
