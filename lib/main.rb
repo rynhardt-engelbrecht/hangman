@@ -6,6 +6,9 @@ class Hangman
 
   include GameLogic
 
+  ROOT_DIRECTORY = File.expand_path('..', __dir__)
+  FILE_PATH = File.join(ROOT_DIRECTORY, 'save_data.json')
+
   def initialize(guess_count, word, correct_guesses = nil, incorrect_guesses = nil)
     @guess_count = guess_count
     @word = word
@@ -33,14 +36,14 @@ class Hangman
       incorrect_guesses: @incorrect_guesses
     }
 
-    File.open('../save_data.json', 'w') do |file|
+    File.open(FILE_PATH, 'w') do |file|
       file.puts JSON.dump(json_data)
     end
   end
 
   def self.from_json
     begin
-      json_string = File.read('../save_data.json')
+      json_string = File.read(FILE_PATH)
     rescue Errno::ENOENT
       puts 'No save data to load from.'
       return
