@@ -14,8 +14,10 @@ module GameLogic
   def update_correct_guesses(guess)
     word_arr = @word.split('')
     if guess.length == 1
-      word_arr.each_index do |index|
-        word_arr[index] == guess ? @correct_guesses[index] = guess : @incorrect_guesses << guess
+      if word_arr.include? guess
+        word_arr.each_index { |index| @correct_guesses[index] = guess if word_arr[index] == guess }
+      else
+        @incorrect_guesses << guess
       end
     else
       guess_arr = guess.split('')
@@ -28,7 +30,7 @@ module GameLogic
       puts 'Enter your guess>>'
       guess = make_guess
       update_correct_guesses(guess)
-      show_revealed
+      show_game_state
 
       break if win_game?(guess)
     end
