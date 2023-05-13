@@ -6,7 +6,8 @@ class Hangman
   def initialize(guess_count, word)
     @guess_count = guess_count
     @word = word
-    @revealed_arr = Array.new(@word.length, '_')
+    @correct_guesses = Array.new(@word.length, '_')
+    @incorrect_guesses = []
   end
 
   def self.random_word

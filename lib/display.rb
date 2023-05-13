@@ -1,5 +1,5 @@
 module Display
   def show_revealed
-    puts @revealed_arr.join(' ')
+    puts @correct_guesses.join
   end
 end

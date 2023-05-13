@@ -13,10 +13,13 @@ module GameLogic
 
   def update_correct_guesses(guess)
     word_arr = @word.split('')
-    guess_arr = guess.split('')
-
-    word_arr.each_index do |index|
-      @revealed_arr[index] = word_arr[index] if guess_arr.include? word_arr[index]
+    if guess.length == 1
+      word_arr.each_index do |index|
+        word_arr[index] == guess ? @correct_guesses[index] = guess : @incorrect_guesses << guess
+      end
+    else
+      guess_arr = guess.split('')
+      guess_arr == word_arr ? @correct_guesses = guess_arr : @incorrect_guesses << guess
     end
   end
 
@@ -32,6 +35,6 @@ module GameLogic
   end
 
   def win_game?(guess)
-    @revealed_arr.none? { |char| char == '_' }
+    @correct_guesses.none? { |char| char == '_' }
   end
 end
