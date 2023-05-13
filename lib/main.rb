@@ -1,7 +1,12 @@
+require_relative 'logic'
+
 class Hangman
-  def initialize(guesses, word)
-    @guesses = guesses
+  include GameLogic
+
+  def initialize(guess_count, word)
+    @guess_count = guess_count
     @word = word
+    @revealed_arr = Array.new(@word.length, '_')
   end
 
   def self.random_word
