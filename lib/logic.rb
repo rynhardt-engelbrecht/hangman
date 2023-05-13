@@ -32,11 +32,15 @@ module GameLogic
       update_correct_guesses(guess)
       show_game_state
 
-      break if win_game?(guess)
+      break if win_game?(guess) || lose_game?
     end
   end
 
   def win_game?(guess)
     @correct_guesses.none? { |char| char == '_' }
+  end
+
+  def lose_game?
+    @incorrect_guesses.length == 6
   end
 end
