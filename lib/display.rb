@@ -13,6 +13,20 @@ module Display
       'quit' => 'Exiting...',
       'win' => 'Congratulations! You guessed the word and survived!',
       'lose' => 'Game over... You couldn\'t guess the word and the stickman was hanged.'
-    }
+    }[type]
+  end
+
+  def turn_message(type)
+    {
+      'guess' => "#{@guess_count} lives remainig.",
+      'guess warning' => 'Be careful! You only have 1 life remaining.',
+    }[type]
+  end
+
+  def error_message(type)
+    {
+      'guess' => 'Please only enter 1 character or attempt to guess the whole word>>',
+      'save/load' => "Please only enter 'y' or 'n'>>",
+    }[type]
   end
 end
