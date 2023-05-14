@@ -77,7 +77,7 @@ module GameLogic
   def play
     loop do
       $stdout.clear_screen
-      puts last_guess(@last_guess)
+      puts last_guess
       show_user_turn
       user_input
 
