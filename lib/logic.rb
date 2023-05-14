@@ -74,6 +74,20 @@ module GameLogic
     puts 'Enter your guess>>'
     user_input
 
-    play unless chances_for_error < 1 # || win game
+    play unless game_inactive?
+  end
+
+  def win_game?
+    uncovered_key.none? { |c| c == '-' }
+  end
+
+  def game_inactive?
+    return false if lose_game? || win_game?
+
+    true
+  end
+
+  def lose_game?
+    chances_for_error > 1
   end
 end
