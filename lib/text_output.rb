@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 # module to handle messages to the user
-module TextOutput
 
+# rubocop:disable Layout/LineLength
+module TextOutput
   def game_message(message)
     {
       quit: 'Exiting now...',
@@ -29,3 +30,4 @@ module TextOutput
     }[message]
   end
 end
+# rubocop:enable Layout/LineLength

@@ -14,7 +14,7 @@ module Display
     print turn_message(:enter_guess)
   end
 
-  def last_guess(guess)
+  def last_guess
     return turn_message(:incorrect_guess) if guess_history[-1] == red(@last_guess)
 
     turn_message(:correct_guess) if guess_history[-1] == green(@last_guess)
