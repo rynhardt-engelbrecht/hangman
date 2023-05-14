@@ -13,6 +13,14 @@ module TextOutput
       lose: "Game over... You could not guess the word. The word was: #{key}"
     }[message]
   end
-  def turn_message; end
+
+  def turn_message(message)
+    {
+      enter_guess: 'Or, enter your guess>>',
+      enter_control: "Press either of the following keys:\n - 'q;', 'quit;' to quit the game.\n - 's;', 'save;' to save the current session.",
+      lives: "#{chances_for_error} lives remaining. ",
+    }[message]
+  end
+
   def error_message; end
 end
