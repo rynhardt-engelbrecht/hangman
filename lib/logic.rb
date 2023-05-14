@@ -2,16 +2,19 @@
 
 require_relative 'color'
 require_relative 'display'
+require_relative 'text_output'
+require 'io/console'
 
 # module to handle main functionality of the game
 module GameLogic
   include Colors
   include Display
+  include TextOutput
 
   EXIT_KEYS = %w[q; exit;].freeze
   SAVE_KEYS = %w[s; save;].freeze
-  LOAD_KEYS = %w[l; load;].freeze
-  CONTROL_KEYS = [].concat(EXIT_KEYS, SAVE_KEYS, LOAD_KEYS).freeze
+  # LOAD_KEYS = %w[l; load;].freeze
+  CONTROL_KEYS = [].concat(EXIT_KEYS, SAVE_KEYS).freeze
 
   def user_input
     input = gets.chomp.downcase
@@ -27,13 +30,9 @@ module GameLogic
 
   def control_input(input)
     if EXIT_KEYS.include?(input)
-      exit
+      exit_game
     elsif SAVE_KEYS.include?(input)
-      to_json
-      game_message('save')
-    else
-      self.class.from_json
-      game_message('load')
+      save_game
     end
   end
 
@@ -71,7 +70,8 @@ module GameLogic
   end
 
   def play
-    puts 'Enter your guess>>'
+    $stdout.clear_screen
+    show_user_turn
     user_input
 
     play unless game_inactive?
@@ -89,5 +89,26 @@ module GameLogic
 
   def lose_game?
     chances_for_error > 1
+  end
+
+  def exit_game
+    $stdout.clear_screen
+    puts game_message(:quit)
+    sleep 2
+    exit
+  end
+
+  def save_game
+    $stdout.clear_screen
+    puts game_message(:save)
+    sleep 2
+    to_json
+  end
+
+  def self.load_game
+    $stdout.clear_screen
+    puts game_message(:save)
+    sleep 2
+    from_json
   end
 end
