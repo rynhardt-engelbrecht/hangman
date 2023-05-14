@@ -5,10 +5,8 @@ module TextOutput
   def game_message(message)
     {
       quit: 'Exiting now...',
-      save: 'Current session has been saved.',
+      save: 'Current session being saved...',
       save_prompt: 'Would you like to save the session before quitting?',
-      load: 'Previous session has been loaded.',
-      load_prompt: 'Would you like to load the last saved session?',
       win: 'Congratulations! You successfully guessed the word.',
       lose: "Game over... You could not guess the word. The word was: #{key}"
     }[message]
@@ -22,5 +20,9 @@ module TextOutput
     }[message]
   end
 
-  def error_message; end
+  def error_message(message)
+    {
+      input: "Please only enter 1 character, an attempt at the whole word. You can't enter previous guesses again."
+    }[message]
+  end
 end

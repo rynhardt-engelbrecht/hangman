@@ -13,19 +13,19 @@ module GameLogic
 
   EXIT_KEYS = %w[q; exit;].freeze
   SAVE_KEYS = %w[s; save;].freeze
-  # LOAD_KEYS = %w[l; load;].freeze
   CONTROL_KEYS = [].concat(EXIT_KEYS, SAVE_KEYS).freeze
 
   def user_input
-    input = gets.chomp.downcase
-    if CONTROL_KEYS.include?(input)
-      return control_input(input)
-    elsif validate_input(input)
-      return evaluate_guess(key, input)
-    end
+    loop do
+      input = gets.chomp.downcase
+      if CONTROL_KEYS.include?(input)
+        return control_input(input)
+      elsif validate_input(input)
+        return evaluate_guess(key, input)
+      end
 
-    puts 'Invalid input.'
-    user_input
+      puts error_message(:input)
+    end
   end
 
   def control_input(input)
@@ -37,7 +37,11 @@ module GameLogic
   end
 
   def validate_input(input)
-    [1, key.length].include?(input.length) && /^[[:alpha:]+]$/.match?(input)
+    [1, key.length].include?(input.length) && /^[[:alpha:]]+$/.match?(input) && not_in_history?(input)
+  end
+
+  def not_in_history?(input)
+    !(guess_history.include?(green(input)) || guess_history.include?(red(input)))
   end
 
   def evaluate_guess(key_word, string)
@@ -70,45 +74,48 @@ module GameLogic
   end
 
   def play
-    $stdout.clear_screen
-    show_user_turn
-    user_input
+    loop do
+      $stdout.clear_screen
+      show_user_turn
+      user_input
 
-    play unless game_inactive?
+      break unless game_active?
+    end
+
+    puts game_message(:win) if win_game?
+    puts game_message(:lose) if lose_game?
   end
 
   def win_game?
     uncovered_key.none? { |c| c == '-' }
   end
 
-  def game_inactive?
-    return false if lose_game? || win_game?
-
-    true
+  def game_active?
+    !lose_game? && !win_game?
   end
 
   def lose_game?
-    chances_for_error > 1
+    chances_for_error.zero?
   end
 
   def exit_game
     $stdout.clear_screen
     puts game_message(:quit)
-    sleep 2
+    sleep 1
     exit
   end
 
   def save_game
     $stdout.clear_screen
     puts game_message(:save)
-    sleep 2
+    sleep 1
     to_json
   end
 
   def self.load_game
     $stdout.clear_screen
     puts game_message(:save)
-    sleep 2
+    sleep 1
     from_json
   end
 end

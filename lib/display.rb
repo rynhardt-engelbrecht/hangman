@@ -7,7 +7,8 @@ module Display
   include TextOutput
 
   def show_user_turn
-    puts uncovered_key.join(' ')
+    print uncovered_key.join(' ')
+    puts "  Guess history: #{guess_history.join(', ')}"
     print turn_message(:lives)
     puts turn_message(:enter_control)
     print turn_message(:enter_guess)

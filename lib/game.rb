@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'logic'
 require 'json'
 
@@ -40,7 +42,7 @@ class Game
     end
 
     data = JSON.parse(json_string, symbolize_names: true)
-    new(data[:chances_for_error], data[:key], data[:guess_history], data[:uncovered_key])
+    Game.new(data[:chances_for_error], data[:key], data[:guess_history], data[:uncovered_key])
   end
 
   private
