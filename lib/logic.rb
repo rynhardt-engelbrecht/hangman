@@ -4,6 +4,7 @@ require_relative 'display'
 
 # module to handle main functionality of the game
 module GameLogic
+  include Colors
   # include Display
 
   EXIT_KEYS = %w[q; exit;].freeze
@@ -14,7 +15,7 @@ module GameLogic
   def user_input
     input = gets.chomp.downcase
     if CONTROL_KEYS.include?(input)
-      control_input(input)
+      return control_input(input)
     elsif validate_input(input)
       return evaluate_guess(key, input)
     end
@@ -55,5 +56,12 @@ module GameLogic
 
   def check_word(string)
     self.uncovered_key = string.split('') if string == key
+  end
+
+  def play
+    puts 'Enter your guess>>'
+    user_input
+
+    play unless chances_for_error < 1
   end
 end
