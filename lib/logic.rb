@@ -15,8 +15,8 @@ module GameLogic
     input = gets.chomp.downcase
     if CONTROL_KEYS.include?(input)
       control_input(input)
-    else
-      return evaluate_guess(key, input) if [1, key.length].include?(input.length) && /^[[:alpha:]]+$/.match?(input)
+    elsif validate_input(input)
+      return evaluate_guess(key, input)
     end
 
     puts 'Invalid input.'
@@ -31,6 +31,10 @@ module GameLogic
     else
       self.class.from_json
     end
+  end
+
+  def validate_input(input)
+    [1, key.length].include?(input.length) && /^[[:alpha:]+]$/.match?(input)
   end
 
   def evaluate_guess(key_word, string)
