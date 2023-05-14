@@ -30,8 +30,10 @@ module GameLogic
       exit
     elsif SAVE_KEYS.include?(input)
       to_json
+      game_message('save')
     else
       self.class.from_json
+      game_message('load')
     end
   end
 
@@ -72,6 +74,6 @@ module GameLogic
     puts 'Enter your guess>>'
     user_input
 
-    play unless chances_for_error < 1
+    play unless chances_for_error < 1 # || win game
   end
 end
