@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
+require_relative 'color'
 require_relative 'display'
 
 # module to handle main functionality of the game
 module GameLogic
   include Colors
-  # include Display
+  include Display
 
   EXIT_KEYS = %w[q; exit;].freeze
   SAVE_KEYS = %w[s; save;].freeze
@@ -42,20 +43,29 @@ module GameLogic
     temp_key = key_word.split('')
     return check_letter(temp_key, string) if string.length == 1
 
-    guess_history.push(string)
     check_word(string)
   end
 
   def check_letter(key_word, char)
-    return unless key.include?(char)
-
-    key_word.each_index do |index|
-      uncovered_key[index] = char if key_word[index] == char
+    if key.include?(char)
+      guess_history.push(green(char))
+      key_word.each_index do |index|
+        uncovered_key[index] = char if key_word[index] == char
+      end
+    else
+      guess_history.push(red(char))
+      self.chances_for_error -= 1
     end
   end
 
   def check_word(string)
-    self.uncovered_key = string.split('') if string == key
+    if string == key
+      guess_history.push(green(string))
+      self.uncovered_key = string.split('')
+    else
+      guess_history.push(red(string))
+      self.chances_for_error -= 1
+    end
   end
 
   def play

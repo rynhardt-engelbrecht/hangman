@@ -2,6 +2,8 @@ require_relative 'logic'
 require 'json'
 
 ROOT_DIR = File.expand_path('..', __dir__)
+Dir.mkdir("#{ROOT_DIR}/data/") unless Dir.exist?("#{ROOT_DIR}/data/")
+JSON_FILE_PATH = File.join(ROOT_DIR, '/data/data.json')
 
 # class to contain state of the game
 class Game
@@ -9,29 +11,12 @@ class Game
 
   include GameLogic
 
-  @@JSON_FILE_PATH = File.join(ROOT_DIR, '/data/data.json')
-
   def initialize(chances_for_error, key, guess_history, uncovered_key = nil)
     @chances_for_error = chances_for_error
     @guess_history = guess_history
     @key = key
     @uncovered_key = uncovered_key || Array.new(key.length, '-')
   end
-
-  private
-
-  def to_json
-    json_data = {
-      chances_for_error: @chances_for_error,
-      key: @key,
-      guess_history: @guess_history,
-      uncovered_key: @uncovered_key
-    }
-
-    File.open(@@JSON_FILE_PATH, 'w') { |file| file.puts JSON.dump(json_data) }
-  end
-
-  public
 
   def self.random_key
     dictionary_path = File.join(ROOT_DIR, 'dictionary.txt')
@@ -48,13 +33,26 @@ class Game
 
   def self.from_json
     begin
-      json_string = File.read(@@JSON_FILE_PATH)
+      json_string = File.read(JSON_FILE_PATH)
     rescue Errno::ENOENT
       puts 'No save data to read from.'
       return
     end
 
     data = JSON.parse(json_string, symbolize_names: true)
-    self.new(data[:chances_for_error], data[:key], data[:guess_history], data[:uncovered_key])
+    new(data[:chances_for_error], data[:key], data[:guess_history], data[:uncovered_key])
+  end
+
+  private
+
+  def to_json(_obj = nil)
+    json_data = {
+      chances_for_error: @chances_for_error,
+      key: @key,
+      guess_history: @guess_history,
+      uncovered_key: @uncovered_key
+    }
+
+    File.open(JSON_FILE_PATH, 'w') { |file| file.puts JSON.dump(json_data) }
   end
 end
