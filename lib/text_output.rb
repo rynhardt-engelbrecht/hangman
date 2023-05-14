@@ -2,13 +2,14 @@
 
 # module to handle messages to the user
 module TextOutput
+
   def game_message(message)
     {
       quit: 'Exiting now...',
       save: 'Current session being saved...',
       save_prompt: 'Would you like to save the session before quitting?',
-      win: 'Congratulations! You successfully guessed the word.',
-      lose: "Game over... You could not guess the word. The word was: #{key}"
+      win: "\nCongratulations! You successfully guessed the word. The word was: #{green(key)}",
+      lose: "\nGame over... You could not guess the word. The word was: #{red(key)}"
     }[message]
   end
 
