@@ -13,4 +13,10 @@ module Display
     puts turn_message(:enter_control)
     print turn_message(:enter_guess)
   end
+
+  def last_guess(guess)
+    return turn_message(:incorrect_guess) if guess_history[-1] == red(@last_guess)
+
+    turn_message(:correct_guess) if guess_history[-1] == green(@last_guess)
+  end
 end

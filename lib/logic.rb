@@ -21,6 +21,7 @@ module GameLogic
       if CONTROL_KEYS.include?(input)
         return control_input(input)
       elsif validate_input(input)
+        @last_guess = input
         return evaluate_guess(key, input)
       end
 
@@ -76,6 +77,7 @@ module GameLogic
   def play
     loop do
       $stdout.clear_screen
+      puts last_guess(@last_guess)
       show_user_turn
       user_input
 
